@@ -15,19 +15,47 @@ def load_accounts_config(config_file='accounts_config.json'):
 
 
 def extract_account_number(csv_file):
-    """Extract account number from filename pattern: *_YYYYMMDD_ACCT_N.csv"""
-    parts = os.path.splitext(os.path.basename(csv_file))[0].split('_')
-    if len(parts) >= 3:
-        return parts[-2]
+    """Extract account number from filename patterns:
+    - Maybank savings: *_YYYYMMDD_ACCT.csv → last part is account
+    - Maybank CC: card_cc.csv → use parent dir *_YYYYMMDD which has no account
+    - CIMB CC: card_XXXX.csv → XXXX is the card last-4
+    """
+    stem = os.path.splitext(os.path.basename(csv_file))[0]
+    parts = stem.split('_')
+    if parts[0] == 'card' and len(parts) == 2 and parts[1] != 'savings':
+        return parts[1]
+    parent_parts = os.path.basename(os.path.dirname(csv_file)).split('_')
+    if len(parent_parts) >= 3:
+        return parent_parts[-1]
     return None
 
 
-def convert_date(date_str):
-    for fmt in ('%d/%m/%Y', '%d/%m/%y', '%d %b'):
+def extract_statement_date(csv_file):
+    """Extract YYYYMMDD from parent directory name like '749358443_20260131_6158'."""
+    parent = os.path.basename(os.path.dirname(csv_file))
+    m = re.search(r'_(20\d{2})(\d{2})\d{2}', parent)
+    if m:
+        return int(m.group(1)), int(m.group(2))
+    return None, None
+
+
+def convert_date(date_str, stmt_year=None, stmt_month=None):
+    for fmt in ('%d/%m/%Y', '%d/%m/%y'):
         try:
             return datetime.strptime(date_str, fmt).strftime('%Y-%m-%d')
         except ValueError:
             continue
+    # DD/MM without year — infer from statement date
+    m = re.match(r'^(\d{2})/(\d{2})$', date_str)
+    if m and stmt_year:
+        day, month = int(m.group(1)), int(m.group(2))
+        year = stmt_year - 1 if month > stmt_month else stmt_year
+        return f'{year}-{month:02d}-{day:02d}'
+    # DD MMM format (e.g. "28 DEC" — already resolved by CIMB extractor to DD/MM/YYYY)
+    try:
+        return datetime.strptime(date_str, '%d %b').strftime('%Y-%m-%d')
+    except ValueError:
+        pass
     return date_str
 
 
@@ -36,12 +64,15 @@ def csv_to_beancount(csv_file, config_file='accounts_config.json', currency='MYR
     accounts_map = load_accounts_config(config_file)
     account_num = extract_account_number(csv_file)
     account_name = accounts_map.get(account_num, 'Assets:Bank')
+    stmt_year, stmt_month = extract_statement_date(csv_file)
 
     transactions = []
     with open(csv_file, 'r', newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            date = convert_date(row.get('Transaction Date') or row.get('Date') or '')
+            date = convert_date(row.get('Transaction Date') or row.get('Date') or '', stmt_year, stmt_month)
+            if not date or date == '':
+                continue
             desc = row.get('Description', '').strip()
             debit = float(row['Debit']) if row.get('Debit') else 0.0
             credit = float(row['Credit']) if row.get('Credit') else 0.0

@@ -7,6 +7,9 @@
         "6430": "Assets:Bank:MBB-5648-1057-6430",
         "3179": "Assets:Bank:MBB-9000-0003-3179",
         "7811": "Assets:Bank:PBB-381-051-7811",
-        "3814": "Assets:Bank:PBB-490-348-3814"
+        "3814": "Assets:Bank:PBB-490-348-3814",
+        "cc": "Liabilities:CreditCard:MBB",
+        "1821": "Liabilities:CreditCard:CIMB-1821",
+        "6591": "Liabilities:CreditCard:CIMB-6591"
     }
 }

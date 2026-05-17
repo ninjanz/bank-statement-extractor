@@ -60,8 +60,11 @@ def cmd_beancount(args):
     for csv_file in files:
         result = csv_to_beancount(csv_file, config_file=args.config)
         if args.output:
-            out_path = os.path.join(args.output, os.path.splitext(os.path.basename(csv_file))[0] + '.beancount')
-            os.makedirs(args.output, exist_ok=True)
+            # Preserve parent dir structure (e.g., output/statement_name/card.csv → beancount_output/statement_name/card.beancount)
+            parent = os.path.basename(os.path.dirname(csv_file))
+            out_dir = os.path.join(args.output, parent)
+            os.makedirs(out_dir, exist_ok=True)
+            out_path = os.path.join(out_dir, os.path.splitext(os.path.basename(csv_file))[0] + '.beancount')
             with open(out_path, 'w', encoding='utf-8') as f:
                 f.write(result)
             print(f'Written: {out_path}')

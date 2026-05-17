@@ -1,7 +1,11 @@
 import re
+from datetime import datetime
 from .base import BaseExtractor
 
 CARD_HEADER_RE = re.compile(r'^(\d{4}-\d{4}-\d{4}-\d{4}|[X\d]{4}-[X\d]{4}-[X\d]{4}-\d{4})\s+')
+STMT_DATE_RE = re.compile(r'(\d{1,2})\s+(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(\d{4})')
+MONTHS = {'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 'MAY': 5, 'JUN': 6,
+           'JUL': 7, 'AUG': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12}
 TRANSACTION_RE = re.compile(
     r'^(\d{2}\s+[A-Z]{3})\s+(\d{2}\s+[A-Z]{3})\s+(.+?)\s+([\d,]+\.\d{2})(CR)?$'
 )
@@ -49,10 +53,32 @@ def _card_from_header(line):
     return None
 
 
+def _resolve_date(date_str, stmt_year, stmt_month):
+    """Convert '28 DEC' to '28/12/2025' using statement date for year inference."""
+    parts = date_str.strip().split()
+    if len(parts) != 2:
+        return date_str
+    day, mon = parts
+    mon_num = MONTHS.get(mon)
+    if not mon_num:
+        return date_str
+    year = stmt_year - 1 if mon_num > stmt_month else stmt_year
+    return f'{int(day):02d}/{mon_num:02d}/{year}'
+
+
 class CimbCCExtractor(BaseExtractor):
+
+    def _find_statement_date(self, all_lines):
+        for line in all_lines[:30]:
+            m = STMT_DATE_RE.search(line)
+            if m:
+                day, mon, year = m.groups()
+                return int(year), MONTHS[mon]
+        return None, None
 
     def extract(self, pdf_path):
         all_lines = self.read_pdf_lines(pdf_path)
+        stmt_year, stmt_month = self._find_statement_date(all_lines)
         cards = {}
         current_card = None
         transactions = []
@@ -118,7 +144,8 @@ class CimbCCExtractor(BaseExtractor):
                     break
 
                 transactions.append({
-                    'Posting Date': post_date, 'Transaction Date': tx_date,
+                    'Posting Date': _resolve_date(post_date, stmt_year, stmt_month),
+                    'Transaction Date': _resolve_date(tx_date, stmt_year, stmt_month),
                     'Description': desc, 'Amount': amt,
                 })
                 i = j
