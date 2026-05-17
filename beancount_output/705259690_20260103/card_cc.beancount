@@ -1,0 +1,111 @@
+2025-12-04 * "ASTRO AUTO DEBIT kuala lumpur MY"
+  Liabilities:CreditCard:MBB  -217.10 MYR
+  Expenses:Uncategorized
+
+2025-12-08 * "PYMT@MAYBANK2U.COM"
+  Liabilities:CreditCard:MBB  15057.27 MYR
+  Expenses:Uncategorized
+
+2025-12-08 * "HEROKU* NOV-109039976 WWW.HEROKU.CO US [FX: USD 5.00]"
+  Liabilities:CreditCard:MBB  -21.06 MYR
+  Expenses:Uncategorized  5.00 USD { 21.06 MYR }
+
+2025-12-09 * "APPLE.COM/BILL ITUNES.COM IE"
+  Liabilities:CreditCard:MBB  -44.90 MYR
+  Expenses:Uncategorized
+
+2025-12-10 * "SHELL-JET MELATI AP GOMBAK MY"
+  Liabilities:CreditCard:MBB  -66.09 MYR
+  Expenses:Uncategorized
+
+2025-12-10 * "SHELL-JET MELATI AP GOMBAK MY"
+  Liabilities:CreditCard:MBB  -9.80 MYR
+  Expenses:Uncategorized
+
+2025-12-10 * "APPLE.COM/BILL ITUNES.COM IE"
+  Liabilities:CreditCard:MBB  -60.40 MYR
+  Expenses:Uncategorized
+
+2025-12-10 * "APPLE.COM/BILL ITUNES.COM IE"
+  Liabilities:CreditCard:MBB  -131.90 MYR
+  Expenses:Uncategorized
+
+2025-12-13 * "SHELL-EZ JET STATION AP KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -56.41 MYR
+  Expenses:Uncategorized
+
+2025-12-14 * "GUARDIAN-ATRIUM-APT AP AMPANG MY"
+  Liabilities:CreditCard:MBB  -16.20 MYR
+  Expenses:Uncategorized
+
+2025-12-16 * "TNG-EWALLET ECOM 2-EC KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -252.50 MYR
+  Expenses:Uncategorized
+
+2025-12-17 * "ILLUME ADVANCED DENTIS AP CHENNAI IN [FX: INR 21,037.00]"
+  Liabilities:CreditCard:MBB  -972.40 MYR
+  Expenses:Uncategorized  21037.00 INR { 972.40 MYR }
+
+2025-12-18 * "APPLE.COM/BILL ITUNES.COM IE"
+  Liabilities:CreditCard:MBB  -189.90 MYR
+  Expenses:Uncategorized
+
+2025-12-20 * "CONVEX MALAYSIA SDN BH AP KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -53.00 MYR
+  Expenses:Uncategorized
+
+2025-12-22 * "TM TECH UN 1041356302 KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -189.75 MYR
+  Expenses:Uncategorized
+
+2025-12-23 * "SHELL-JLN LINGKARAN TGH GOMBAK MY"
+  Liabilities:CreditCard:MBB  -66.21 MYR
+  Expenses:Uncategorized
+
+2025-12-23 * "GRABPAY-EC PETALING JAYA MY"
+  Liabilities:CreditCard:MBB  -347.44 MYR
+  Expenses:Uncategorized
+
+2025-12-25 * "SPOTIFY STOCKHOLM SE"
+  Liabilities:CreditCard:MBB  -30.90 MYR
+  Expenses:Uncategorized
+
+2025-12-25 * "TIMEDOTCOM SHAH ALAM MY"
+  Liabilities:CreditCard:MBB  -208.82 MYR
+  Expenses:Uncategorized
+
+2025-12-25 * "SHELL - BANGSAR PETROL AP KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -10.40 MYR
+  Expenses:Uncategorized
+
+2025-12-26 * "SHELL - NTS JALAN AMPANG KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -80.24 MYR
+  Expenses:Uncategorized
+
+2025-12-27 * "Partners on Booking BV Amsterdam NL"
+  Liabilities:CreditCard:MBB  -615.49 MYR
+  Expenses:Uncategorized
+
+2025-12-27 * "KLCC PARKING-ENTRY & E AP KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -17.00 MYR
+  Expenses:Uncategorized
+
+2025-12-30 * "KK SUPER MART-WM AP KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -4.80 MYR
+  Expenses:Uncategorized
+
+2025-12-30 * "ZUS COFFEE-MENARA PBB AP KUALA LUMPUR MY"
+  Liabilities:CreditCard:MBB  -14.20 MYR
+  Expenses:Uncategorized
+
+2025-12-31 * "CASH REBATE"
+  Liabilities:CreditCard:MBB  18.90 MYR
+  Expenses:Uncategorized
+
+2026-01-01 * "APSB_T.TEC_NZ CURRY AP W.P.K.L MY"
+  Liabilities:CreditCard:MBB  -4.00 MYR
+  Expenses:Uncategorized
+
+2026-01-02 * "SHELL-JLN LINGKARAN TG AP GOMBAK MY"
+  Liabilities:CreditCard:MBB  -184.86 MYR
+  Expenses:Uncategorized
