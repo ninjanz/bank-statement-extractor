@@ -1,0 +1,15 @@
+[project]
+name = "bank-statement-extractor"
+version = "1.0.0"
+description = "Extract bank/credit card statements from PDF to CSV, then process into Beancount format"
+requires-python = ">=3.10"
+dependencies = [
+    "pdfplumber>=0.10",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+beancount = ["beancount>=2.3"]
+
+[project.scripts]
+bse = "run:main"
