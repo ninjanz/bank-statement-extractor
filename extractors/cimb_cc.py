@@ -7,11 +7,14 @@ STMT_DATE_RE = re.compile(r'(\d{1,2})\s+(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT
 MONTHS = {'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 'MAY': 5, 'JUN': 6,
            'JUL': 7, 'AUG': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12}
 TRANSACTION_RE = re.compile(
-    r'^(\d{2}\s+[A-Z]{3})\s+(\d{2}\s+[A-Z]{3})\s+(.+?)\s+([\d,]+\.\d{2})(CR)?$'
+    r'^(\d{2}\s+[A-Z]{3})\s+(\d{2}\s+[A-Z]{3})\s+(.+?[MY])\s+([\d,]+\.\d{2})(CR)?$'
+)
+FOREIGN_TRANSACTION_RE = re.compile(
+    r'^(\d{2}\s+[A-Z]{3})\s+(\d{2}\s+[A-Z]{3})\s+(.+?[^MY])\s+([\d,]+\.\d{2})(CR)?$'
 )
 PREV_BALANCE_RE = re.compile(r'^PREVIOUS BALANCE\s+([\d,]+\.\d{2})')
 STMT_BALANCE_RE = re.compile(r'^STATEMENT BALANCE\s+([\d,]+\.\d{2})')
-FOREIGN_CURRENCY_RE = re.compile(r'^\d+[A-Z]+\s+\w+\s+[\d,]+\.\d{2}$')
+FOREIGN_CURRENCY_NEXT_LINE_RE = re.compile(r'^\d+([A-Z\s]*)([\d,]+\.\d{2})$')
 PROMO_RE = re.compile(r'^(Travel to|RM\d+|back on flights|Deals MY|Easy Pay|Now till|0% Easy)')
 CONTINUATION_RE = re.compile(r'^(FROM\s|CREDIT CARD$|[A-Z]{3}$)')
 
@@ -39,8 +42,6 @@ def _is_noise(line):
     for p in NOISE_STRS:
         if p in line:
             return True
-    if FOREIGN_CURRENCY_RE.match(line):
-        return True
     if PROMO_RE.match(line):
         return True
     return False
@@ -124,6 +125,34 @@ class CimbCCExtractor(BaseExtractor):
                 i += 1
                 continue
 
+            tx_m = FOREIGN_TRANSACTION_RE.match(line)
+            if tx_m:
+                post_date, tx_date, desc, amount, cr = tx_m.groups()
+                amt = float(amount.replace(',', ''))
+                if cr == 'CR':
+                    amt = -amt
+
+                j = i + 1
+                while j < len(all_lines):
+                    next_line = all_lines[j].strip()
+                    if not next_line:
+                        j += 1
+                        continue
+                    if FOREIGN_CURRENCY_NEXT_LINE_RE.match(next_line):
+                        fx, fx_amt = FOREIGN_CURRENCY_NEXT_LINE_RE.match(next_line).groups()
+                        desc += ' [' + fx + ' ' + fx_amt + ']'
+                        j += 1
+                        continue
+                    break
+
+                transactions.append({
+                    'Posting Date': _resolve_date(post_date, stmt_year, stmt_month),
+                    'Transaction Date': _resolve_date(tx_date, stmt_year, stmt_month),
+                    'Description': desc, 'Amount': amt,
+                })
+                i = j
+                continue
+            
             tx_m = TRANSACTION_RE.match(line)
             if tx_m:
                 post_date, tx_date, desc, amount, cr = tx_m.groups()

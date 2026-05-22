@@ -40,6 +40,7 @@ def extract_statement_date(csv_file):
 
 
 def convert_date(date_str, stmt_year=None, stmt_month=None):
+    """Convert date string to YYYY-MM-DD format, inferring year from statement date if needed."""
     for fmt in ('%d/%m/%Y', '%d/%m/%y'):
         try:
             return datetime.strptime(date_str, fmt).strftime('%Y-%m-%d')
